@@ -9,9 +9,17 @@ PyTorch ile eğitilmiş Iris çiçeği sınıflandırma modelini kullanan basit 
 - Olasılık barları ile görsel sonuç
 - Modern glassmorphism arayüz
 
+## Direkt Erişim
+🚀 Canlı Demo
+
+Uygulamayı tarayıcıda direkt dene:  
+[https://irisclassifier-web-production.up.railway.app](https://irisclassifier-web-production.up.railway.app)
+
 ## Kurulum
 
 1. Bu repoyu klonla:
 ```bash
 git clone https://github.com/KULLANICI_ADIN/iris-classifier-web.git
 cd iris-classifier-web
+
+ 
