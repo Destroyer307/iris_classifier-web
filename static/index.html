@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iris Flower Classifier</title>
+  <meta name="description" content="PyTorch ile eğitilmiş yapay zeka modeli ile Iris çiçeği türünü tahmin edin." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- Animated background blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" fill="url(#flowerGrad)" opacity="0.18"/>
+          <!-- petals -->
+          <ellipse cx="32" cy="14" rx="7" ry="13" fill="url(#p1)" transform="rotate(0 32 32)"/>
+          <ellipse cx="32" cy="14" rx="7" ry="13" fill="url(#p2)" transform="rotate(72 32 32)"/>
+          <ellipse cx="32" cy="14" rx="7" ry="13" fill="url(#p3)" transform="rotate(144 32 32)"/>
+          <ellipse cx="32" cy="14" rx="7" ry="13" fill="url(#p1)" transform="rotate(216 32 32)"/>
+          <ellipse cx="32" cy="14" rx="7" ry="13" fill="url(#p2)" transform="rotate(288 32 32)"/>
+          <circle cx="32" cy="32" r="8" fill="url(#center)"/>
+          <defs>
+            <linearGradient id="flowerGrad" x1="0" y1="0" x2="64" y2="64">
+              <stop offset="0%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#818cf8"/>
+            </linearGradient>
+            <linearGradient id="p1" x1="32" y1="1" x2="32" y2="27" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#c4b5fd"/>
+              <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.7"/>
+            </linearGradient>
+            <linearGradient id="p2" x1="32" y1="1" x2="32" y2="27" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#a5b4fc"/>
+              <stop offset="100%" stop-color="#4f46e5" stop-opacity="0.7"/>
+            </linearGradient>
+            <linearGradient id="p3" x1="32" y1="1" x2="32" y2="27" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ddd6fe"/>
+              <stop offset="100%" stop-color="#6d28d9" stop-opacity="0.7"/>
+            </linearGradient>
+            <radialGradient id="center" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fde68a"/>
+              <stop offset="100%" stop-color="#f59e0b"/>
+            </radialGradient>
+          </defs>
+        </svg>
+      </div>
+      <div>
+        <h1 class="header-title">Iris Flower Classifier</h1>
+        <p class="header-subtitle">PyTorch · Deep Learning · Multi-Class Classification</p>
+      </div>
+    </header>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+
+      <!-- INPUT CARD -->
+      <div class="card" id="input-card">
+        <div class="card-label">
+          <span class="dot dot-purple"></span>
+          Özellik Girişi
+        </div>
+        <p class="card-desc">Iris çiçeğinin ölçümlerini girin, yapay zeka türünü belirlesin.</p>
+
+        <div class="sliders" id="sliders-form">
+
+          <!-- Sepal Length -->
+          <div class="slider-group" id="group-sepal-length">
+            <div class="slider-header">
+              <label for="sepal_length">Sepal Uzunluğu</label>
+              <span class="slider-unit"><span id="val-sepal_length">5.1</span> cm</span>
+            </div>
+            <div class="range-track">
+              <input type="range" id="sepal_length" min="4.3" max="7.9" step="0.1" value="5.1" />
+              <div class="range-fill" id="fill-sepal_length"></div>
+            </div>
+            <div class="range-bounds"><span>4.3</span><span>7.9</span></div>
+          </div>
+
+          <!-- Sepal Width -->
+          <div class="slider-group" id="group-sepal-width">
+            <div class="slider-header">
+              <label for="sepal_width">Sepal Genişliği</label>
+              <span class="slider-unit"><span id="val-sepal_width">3.5</span> cm</span>
+            </div>
+            <div class="range-track">
+              <input type="range" id="sepal_width" min="2.0" max="4.4" step="0.1" value="3.5" />
+              <div class="range-fill" id="fill-sepal_width"></div>
+            </div>
+            <div class="range-bounds"><span>2.0</span><span>4.4</span></div>
+          </div>
+
+          <!-- Petal Length -->
+          <div class="slider-group" id="group-petal-length">
+            <div class="slider-header">
+              <label for="petal_length">Petal Uzunluğu</label>
+              <span class="slider-unit"><span id="val-petal_length">1.4</span> cm</span>
+            </div>
+            <div class="range-track">
+              <input type="range" id="petal_length" min="1.0" max="6.9" step="0.1" value="1.4" />
+              <div class="range-fill" id="fill-petal_length"></div>
+            </div>
+            <div class="range-bounds"><span>1.0</span><span>6.9</span></div>
+          </div>
+
+          <!-- Petal Width -->
+          <div class="slider-group" id="group-petal-width">
+            <div class="slider-header">
+              <label for="petal_width">Petal Genişliği</label>
+              <span class="slider-unit"><span id="val-petal_width">0.2</span> cm</span>
+            </div>
+            <div class="range-track">
+              <input type="range" id="petal_width" min="0.1" max="2.5" step="0.1" value="0.2" />
+              <div class="range-fill" id="fill-petal_width"></div>
+            </div>
+            <div class="range-bounds"><span>0.1</span><span>2.5</span></div>
+          </div>
+
+        </div>
+
+        <!-- Quick presets -->
+        <div class="presets">
+          <span class="presets-label">Hızlı Örnekler:</span>
+          <button class="preset-btn" id="preset-setosa" data-preset="setosa">Setosa</button>
+          <button class="preset-btn" id="preset-versicolor" data-preset="versicolor">Versicolor</button>
+          <button class="preset-btn" id="preset-virginica" data-preset="virginica">Virginica</button>
+        </div>
+
+        <button class="predict-btn" id="predict-btn">
+          <span class="btn-text">Tahmin Et</span>
+          <span class="btn-spinner" id="btn-spinner"></span>
+        </button>
+      </div>
+
+      <!-- RESULT CARD -->
+      <div class="card result-card" id="result-card">
+        <div class="card-label">
+          <span class="dot dot-green"></span>
+          Tahmin Sonucu
+        </div>
+
+        <!-- Placeholder state -->
+        <div class="result-placeholder" id="result-placeholder">
+          <div class="placeholder-icon">🌸</div>
+          <p>Slider'ları ayarlayıp <strong>Tahmin Et</strong>'e tıklayın</p>
+        </div>
+
+        <!-- Result state (hidden until prediction) -->
+        <div class="result-content hidden" id="result-content">
+
+          <div class="result-badge-wrap">
+            <div class="result-badge" id="result-badge">
+              <span class="result-species" id="result-species">—</span>
+              <span class="result-confidence" id="result-confidence">—</span>
+            </div>
+          </div>
+
+          <div class="species-illustration" id="species-illustration">
+            <!-- SVG changes per species -->
+          </div>
+
+          <!-- Probability bars -->
+          <div class="prob-bars" id="prob-bars">
+            <div class="prob-title">Sınıf Olasılıkları</div>
+
+            <div class="prob-row" id="bar-setosa">
+              <div class="prob-label">
+                <span class="prob-dot" style="background: var(--c-setosa)"></span>
+                Iris-setosa
+              </div>
+              <div class="prob-bar-track">
+                <div class="prob-bar-fill setosa-fill" id="fill-prob-setosa"></div>
+              </div>
+              <span class="prob-pct" id="pct-setosa">0%</span>
+            </div>
+
+            <div class="prob-row" id="bar-versicolor">
+              <div class="prob-label">
+                <span class="prob-dot" style="background: var(--c-versicolor)"></span>
+                Iris-versicolor
+              </div>
+              <div class="prob-bar-track">
+                <div class="prob-bar-fill versicolor-fill" id="fill-prob-versicolor"></div>
+              </div>
+              <span class="prob-pct" id="pct-versicolor">0%</span>
+            </div>
+
+            <div class="prob-row" id="bar-virginica">
+              <div class="prob-label">
+                <span class="prob-dot" style="background: var(--c-virginica)"></span>
+                Iris-virginica
+              </div>
+              <div class="prob-bar-track">
+                <div class="prob-bar-fill virginica-fill" id="fill-prob-virginica"></div>
+              </div>
+              <span class="prob-pct" id="pct-virginica">0%</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Error state -->
+        <div class="result-error hidden" id="result-error">
+          <div class="error-icon">⚠️</div>
+          <p id="error-msg">Bir hata oluştu.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>Iris Dataset · PyTorch MultiClassModel · FastAPI Backend</p>
+      <a href="/docs" target="_blank" class="api-link">API Docs ↗</a>
+    </footer>
+
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
